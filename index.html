@@ -1395,8 +1395,285 @@
 })();
 </script>
 <!-- AUTFISCA_FIX_ENVIO_FIM -->
+<!-- AUTFISCA_FIX_ENVIO_MOBILE_INICIO -->
+<script>
+(function() {
+  const AUTFISCA_APPS_URL = "https://script.google.com/macros/s/AKfycbyPL9GT06ZrNQehT-8OUqzTDAJkIU53YMi2HMvJmv3sy7kmMnFJaTeeX4jp4AHSqItFug/exec";
+  const AUTFISCA_STORAGE_KEY = "autfisca_pesquisa_respostas";
+
+  function setStatus(message, type) {
+    let status = document.getElementById("status");
+
+    if (!status) {
+      status = document.createElement("div");
+      status.id = "status";
+      status.className = "status";
+      const form = document.getElementById("autfiscaForm");
+      if (form && form.parentNode) {
+        form.parentNode.appendChild(status);
+      } else {
+        document.body.appendChild(status);
+      }
+    }
+
+    status.textContent = message;
+    status.className = "status " + (type || "success");
+    status.style.display = "block";
+  }
+
+  function getFormData(form) {
+    const data = {};
+    const elements = form.querySelectorAll("input, select, textarea");
+
+    elements.forEach(function(el) {
+      if (!el.name) return;
+
+      if (el.type === "checkbox") {
+        if (!data[el.name]) data[el.name] = [];
+        if (el.checked) data[el.name].push(el.value);
+      } else if (el.type === "radio") {
+        if (el.checked) {
+          data[el.name] = el.value;
+        } else if (!(el.name in data)) {
+          data[el.name] = "";
+        }
+      } else {
+        data[el.name] = el.value || "";
+      }
+    });
+
+    Object.keys(data).forEach(function(k) {
+      if (Array.isArray(data[k])) {
+        data[k] = data[k].join(" | ");
+      }
+    });
+
+    data.data_envio_local = new Date().toLocaleString("pt-BR");
+    data.origem = "Formulario GitHub Pages Autfisca";
+    data.user_agent = navigator.userAgent;
+
+    return data;
+  }
+
+  function salvarBackup(data) {
+    const respostas = JSON.parse(localStorage.getItem(AUTFISCA_STORAGE_KEY) || "[]");
+    respostas.push(data);
+    localStorage.setItem(AUTFISCA_STORAGE_KEY, JSON.stringify(respostas));
+  }
+
+  function limparCampos(form) {
+    if (!form) return;
+
+    form.reset();
+
+    form.querySelectorAll("input, textarea, select").forEach(function(campo) {
+      if (campo.type === "checkbox" || campo.type === "radio") {
+        campo.checked = false;
+      } else if (campo.tagName === "SELECT") {
+        campo.selectedIndex = 0;
+      } else {
+        campo.value = "";
+      }
+    });
+  }
+
+  function mostrarObrigado() {
+    let box = document.getElementById("thanksBox");
+
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "thanksBox";
+      box.className = "thanks-box";
+      box.innerHTML = "<h3>Resposta registrada. Muito obrigada pela sua contribuição! 💙</h3>Sua participação ajuda diretamente na validação da Autfisca.";
+      const actions = document.querySelector(".actions");
+      if (actions && actions.parentNode) {
+        actions.parentNode.insertBefore(box, actions);
+      } else {
+        document.body.appendChild(box);
+      }
+    }
+
+    box.style.display = "block";
+    box.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  async function enviarAutfisca(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === "function") {
+        e.stopImmediatePropagation();
+      }
+    }
+
+    const form = document.getElementById("autfiscaForm");
+
+    if (!form) {
+      alert("Formulário não encontrado.");
+      return false;
+    }
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return false;
+    }
+
+    const data = getFormData(form);
+
+    try {
+      salvarBackup(data);
+
+      await fetch(AUTFISCA_APPS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      });
+
+      setStatus("Resposta enviada com sucesso. Muito obrigada pela sua contribuição!", "success");
+      mostrarObrigado();
+      limparCampos(form);
+
+    } catch (erro) {
+      salvarBackup(data);
+      setStatus("A resposta foi salva no backup local deste navegador, mas não foi possível confirmar o envio ao Google Sheets.", "warning");
+      console.error("Erro Autfisca:", erro);
+    }
+
+    return false;
+  }
+
+  window.autfiscaEnviarFormulario = enviarAutfisca;
+
+  window.exportarCSV = function() {
+    const respostas = JSON.parse(localStorage.getItem(AUTFISCA_STORAGE_KEY) || "[]");
+
+    if (!respostas.length) {
+      setStatus("Nenhuma resposta salva ainda.", "warning");
+      return;
+    }
+
+    const headers = Array.from(new Set(respostas.flatMap(obj => Object.keys(obj))));
+    const linhas = respostas.map(obj => headers.map(h => '"' + String(obj[h] || "").replace(/"/g, '""') + '"').join(";"));
+    const csv = headers.join(";") + "\\n" + linhas.join("\\n");
+
+    const blob = new Blob(["\\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "respostas_autfisca_backup.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+    setStatus("Backup CSV exportado com sucesso.", "success");
+  };
+
+  window.mostrarRespostas = function() {
+    const respostas = JSON.parse(localStorage.getItem(AUTFISCA_STORAGE_KEY) || "[]");
+
+    if (!respostas.length) {
+      setStatus("Nenhuma resposta salva ainda.", "warning");
+      return;
+    }
+
+    let results = document.getElementById("results");
+    let content = document.getElementById("resultsContent");
+
+    if (!results) {
+      results = document.createElement("div");
+      results.id = "results";
+      results.className = "results";
+      document.body.appendChild(results);
+    }
+
+    if (!content) {
+      content = document.createElement("div");
+      content.id = "resultsContent";
+      results.appendChild(content);
+    }
+
+    const headers = Array.from(new Set(respostas.flatMap(obj => Object.keys(obj))));
+
+    let html = "<p><strong>Total de respostas:</strong> " + respostas.length + "</p>";
+    html += "<div style='overflow:auto; max-height:520px;'><table><thead><tr>";
+
+    headers.forEach(h => html += "<th>" + h + "</th>");
+    html += "</tr></thead><tbody>";
+
+    respostas.forEach(resp => {
+      html += "<tr>";
+      headers.forEach(h => html += "<td>" + (resp[h] || "") + "</td>");
+      html += "</tr>";
+    });
+
+    html += "</tbody></table></div>";
+
+    content.innerHTML = html;
+    results.style.display = "block";
+    results.scrollIntoView({ behavior: "smooth" });
+  };
+
+  window.limparRespostas = function() {
+    const confirmar = confirm("Deseja limpar apenas o backup local e os campos deste navegador? Isso não apaga respostas já enviadas ao Google Sheets.");
+
+    if (!confirmar) return;
+
+    localStorage.removeItem(AUTFISCA_STORAGE_KEY);
+
+    const form = document.getElementById("autfiscaForm");
+    limparCampos(form);
+
+    const results = document.getElementById("results");
+    const content = document.getElementById("resultsContent");
+    const thanksBox = document.getElementById("thanksBox");
+
+    if (content) content.innerHTML = "";
+    if (results) results.style.display = "none";
+    if (thanksBox) thanksBox.style.display = "none";
+
+    setStatus("Backup local e campos limpos. O Google Sheets não foi alterado.", "success");
+  };
+
+  function conectar() {
+    const form = document.getElementById("autfiscaForm");
+
+    if (!form) {
+      console.warn("Autfisca: formulário ainda não encontrado.");
+      return;
+    }
+
+    form.setAttribute("autocomplete", "off");
+    form.addEventListener("submit", enviarAutfisca, true);
+    form.onsubmit = enviarAutfisca;
+
+    const btn = form.querySelector('button[type="submit"]') || document.querySelector(".btn-primary");
+
+    if (btn) {
+      btn.textContent = "Enviar / salvar resposta";
+      btn.onclick = function(ev) {
+        return enviarAutfisca(ev);
+      };
+    }
+
+    console.log("Autfisca: hotfix mobile ativo.");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", conectar);
+  } else {
+    conectar();
+  }
+})();
+</script>
+<!-- AUTFISCA_FIX_ENVIO_MOBILE_FIM -->
 </body>
 </html>
+
 
 
 
