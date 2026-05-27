@@ -1,0 +1,1403 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pesquisa de Validação - Autfisca</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --primary: #1f4e79;
+      --primary-dark: #163852;
+      --accent: #2f80ed;
+      --text: #1f2933;
+      --muted: #667085;
+      --border: #d9e2ec;
+      --soft: #eef4fb;
+      --danger: #b42318;
+      --success: #027a48;
+      --warning: #b54708;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #edf4fb 0%, #f7f9fc 45%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, #163852, #1f4e79, #2f80ed);
+      color: white;
+      padding: 42px 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin: 0 auto;
+      max-width: 900px;
+      font-size: 17px;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: -28px auto 60px;
+      padding: 0 18px;
+    }
+
+    .intro-card,
+    .section {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(31, 78, 121, 0.10);
+      border: 1px solid rgba(217, 226, 236, 0.8);
+    }
+
+    .intro-card {
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--primary);
+      border: 1px solid #c8ddf3;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .intro-card h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: var(--primary-dark);
+    }
+
+    .intro-card p {
+      line-height: 1.65;
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+
+    .summary-box {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .summary-box strong {
+      color: var(--primary-dark);
+    }
+
+    .section {
+      padding: 26px;
+      margin-bottom: 22px;
+    }
+
+    .section h3 {
+      margin: 0 0 6px;
+      color: var(--primary-dark);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-description {
+      color: var(--muted);
+      margin: 0 0 20px;
+      line-height: 1.6;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .question:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    label.main-label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #243b53;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin: -3px 0 8px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.12);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #f8fbff;
+      border-color: #b7d3f2;
+    }
+
+    .option input {
+      margin-top: 3px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .scale label {
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 6px;
+      cursor: pointer;
+      background: white;
+      font-size: 13px;
+    }
+
+    .scale input {
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef4fb;
+      color: var(--primary);
+      border: 1px solid #c8ddf3;
+    }
+
+    .btn-secondary:hover {
+      background: #ddeefa;
+    }
+
+    .btn-danger {
+      background: #fff1f0;
+      color: var(--danger);
+      border: 1px solid #fecdca;
+    }
+
+    .status {
+      display: none;
+      margin: 18px auto;
+      max-width: 900px;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .status.success {
+      display: block;
+      background: #ecfdf3;
+      color: var(--success);
+      border: 1px solid #abefc6;
+    }
+
+    .status.warning {
+      display: block;
+      background: #fffaeb;
+      color: var(--warning);
+      border: 1px solid #fedf89;
+    }
+
+    .results {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(31, 78, 121, 0.08);
+      margin-top: 22px;
+      display: none;
+    }
+
+    .results h3 {
+      margin-top: 0;
+      color: var(--primary-dark);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f6fa;
+      color: #243b53;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    @media (max-width: 760px) {
+      .intro-grid,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .scale {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 27px;
+      }
+
+      .container {
+        margin-top: -18px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .actions, button {
+        display: none !important;
+      }
+
+      .container {
+        margin: 0 auto;
+      }
+
+      .section, .intro-card {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+    }
+      .save-guidance {
+      background: #f0f7ff;
+      border: 1px solid #b7d3f2;
+      border-left: 6px solid #1f4e79;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin: 26px 0 12px;
+      color: #243b53;
+      line-height: 1.55;
+      box-shadow: 0 10px 24px rgba(31, 78, 121, 0.06);
+    }
+
+    .save-guidance strong {
+      color: #163852;
+    }
+
+    .save-guidance .main-action {
+      display: inline-block;
+      background: #1f4e79;
+      color: white;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 3px;
+    }
+
+    .thanks-box {
+      display: none;
+      background: #ecfdf3;
+      color: #027a48;
+      border: 1px solid #abefc6;
+      border-left: 6px solid #027a48;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 22px 0;
+      line-height: 1.6;
+      font-weight: 600;
+      box-shadow: 0 10px 24px rgba(2, 122, 72, 0.08);
+    }
+
+    .thanks-box h3 {
+      margin: 0 0 8px;
+      color: #027a48;
+      font-size: 20px;
+    }
+
+    .admin-note {
+      font-size: 13px;
+      color: #667085;
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Pesquisa de Validação - Autfisca</h1>
+  <p>
+    Ajude-nos a entender as principais dores fiscais, operacionais e tecnológicas de escritórios contábeis,
+    BPOs fiscais e empresas com grande volume de documentos.
+  </p>
+</header>
+
+<div class="container">
+
+  <div class="intro-card">
+    <div class="intro-grid">
+      <div>
+        <span class="badge">Pesquisa estratégica de mercado</span>
+        <h2>Sobre a Autfisca</h2>
+        <p>
+          A Autfisca é uma iniciativa em desenvolvimento voltada à inteligência fiscal assistida,
+          saneamento cadastral, organização de documentos fiscais, pré-validação de inconsistências
+          e apoio à redução de retrabalho em rotinas fiscais.
+        </p>
+        <p>
+          Este questionário tem finalidade de pesquisa e validação. As respostas serão usadas para entender
+          prioridades reais do mercado e estruturar uma solução mais útil para escritórios e empresas.
+        </p>
+      </div>
+
+      <div class="summary-box">
+        <p><strong>Tempo estimado:</strong> 8 a 12 minutos.</p>
+        <p><strong>Público:</strong> escritórios contábeis, BPOs fiscais, analistas fiscais, coordenadores e empresas com volume fiscal.</p>
+        <p><strong>Uso:</strong> validação de dor, proposta de valor, MVP e pilotos.</p>
+      </div>
+    </div>
+  </div>
+
+  <form id="autfiscaForm" autocomplete="off">
+
+    <section class="section">
+      <h3>1. Identificação do respondente</h3>
+      <p class="section-description">Essas informações ajudam a entender o perfil de quem está respondendo.</p>
+
+      <div class="grid-2">
+        <div class="question">
+          <label class="main-label">Nome <span class="required">*</span></label>
+          <input type="text" name="nome" required>
+        </div>
+
+        <div class="question">
+          <label class="main-label">E-mail</label>
+          <input type="email" name="email">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="question">
+          <label class="main-label">WhatsApp ou telefone</label>
+          <input type="tel" name="telefone">
+        </div>
+
+        <div class="question">
+          <label class="main-label">Cargo/função <span class="required">*</span></label>
+          <select name="cargo" required>
+            <option value="">Selecione</option>
+            <option>Sócio(a) / Dono(a) do escritório</option>
+            <option>Coordenador(a) fiscal</option>
+            <option>Analista fiscal sênior</option>
+            <option>Analista fiscal pleno/júnior</option>
+            <option>Assistente fiscal</option>
+            <option>Responsável financeiro/administrativo</option>
+            <option>Empresário(a)</option>
+            <option>Consultor(a)</option>
+            <option>Outro</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>2. Perfil da empresa ou escritório</h3>
+      <p class="section-description">Aqui buscamos entender o porte, segmento e complexidade da operação fiscal.</p>
+
+      <div class="question">
+        <label class="main-label">Tipo de organização <span class="required">*</span></label>
+        <div class="options">
+          <label class="option"><input type="radio" name="tipo_organizacao" value="Escritório contábil" required> Escritório contábil</label>
+          <label class="option"><input type="radio" name="tipo_organizacao" value="BPO fiscal"> BPO fiscal</label>
+          <label class="option"><input type="radio" name="tipo_organizacao" value="Empresa varejista/comercial"> Empresa varejista/comercial</label>
+          <label class="option"><input type="radio" name="tipo_organizacao" value="Indústria"> Indústria</label>
+          <label class="option"><input type="radio" name="tipo_organizacao" value="Distribuidora/atacado"> Distribuidora/atacado</label>
+          <label class="option"><input type="radio" name="tipo_organizacao" value="Outro"> Outro</label>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="question">
+          <label class="main-label">Quantidade aproximada de clientes/empresas atendidas</label>
+          <select name="qtd_clientes">
+            <option value="">Selecione</option>
+            <option>1 empresa própria</option>
+            <option>Até 10 clientes</option>
+            <option>11 a 30 clientes</option>
+            <option>31 a 60 clientes</option>
+            <option>61 a 100 clientes</option>
+            <option>Acima de 100 clientes</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <label class="main-label">Quantidade de pessoas na equipe fiscal</label>
+          <select name="equipe_fiscal">
+            <option value="">Selecione</option>
+            <option>1 pessoa</option>
+            <option>2 a 3 pessoas</option>
+            <option>4 a 6 pessoas</option>
+            <option>7 a 10 pessoas</option>
+            <option>11 a 20 pessoas</option>
+            <option>Acima de 20 pessoas</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Quais regimes tributários aparecem com mais frequência na sua carteira/operação?</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="regimes" value="Simples Nacional"> Simples Nacional</label>
+          <label class="option"><input type="checkbox" name="regimes" value="Lucro Presumido"> Lucro Presumido</label>
+          <label class="option"><input type="checkbox" name="regimes" value="Lucro Real"> Lucro Real</label>
+          <label class="option"><input type="checkbox" name="regimes" value="MEI"> MEI</label>
+          <label class="option"><input type="checkbox" name="regimes" value="Não sei informar"> Não sei informar</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>3. Volume operacional e documentos fiscais</h3>
+      <p class="section-description">Essas perguntas ajudam a dimensionar volume, complexidade e potencial de automação.</p>
+
+      <div class="grid-2">
+        <div class="question">
+          <label class="main-label">Volume aproximado de documentos fiscais processados por mês</label>
+          <select name="volume_documentos">
+            <option value="">Selecione</option>
+            <option>Até 500 documentos/mês</option>
+            <option>501 a 2.000 documentos/mês</option>
+            <option>2.001 a 10.000 documentos/mês</option>
+            <option>10.001 a 50.000 documentos/mês</option>
+            <option>50.001 a 150.000 documentos/mês</option>
+            <option>Acima de 150.000 documentos/mês</option>
+            <option>Não sei estimar</option>
+          </select>
+        </div>
+
+        <div class="question">
+          <label class="main-label">Quais documentos fazem parte da rotina?</label>
+          <div class="options">
+            <label class="option"><input type="checkbox" name="documentos" value="NF-e modelo 55"> NF-e modelo 55</label>
+            <label class="option"><input type="checkbox" name="documentos" value="NFC-e modelo 65"> NFC-e modelo 65</label>
+            <label class="option"><input type="checkbox" name="documentos" value="SAT/CF-e modelo 59"> SAT/CF-e modelo 59</label>
+            <label class="option"><input type="checkbox" name="documentos" value="CT-e"> CT-e</label>
+            <label class="option"><input type="checkbox" name="documentos" value="NFS-e"> NFS-e</label>
+            <label class="option"><input type="checkbox" name="documentos" value="SPED/EFD"> SPED/EFD</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Hoje, qual o maior problema com documentos fiscais?</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="XMLs faltantes"> XMLs faltantes</label>
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="Arquivos duplicados"> Arquivos duplicados</label>
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="Arquivos misturados por empresa/mês"> Arquivos misturados por empresa/mês</label>
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="Dificuldade para separar entrada e saída"> Dificuldade para separar entrada e saída</label>
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="Demora para organizar documentos"> Demora para organizar documentos</label>
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="Cliente envia fora do prazo"> Cliente envia fora do prazo</label>
+          <label class="option"><input type="checkbox" name="problemas_documentos" value="Não há grande problema nesta etapa"> Não há grande problema nesta etapa</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>4. Dores fiscais e retrabalho</h3>
+      <p class="section-description">Classifique a intensidade das dores mais comuns da rotina fiscal.</p>
+
+      <div class="question">
+        <label class="main-label">Em uma escala de 1 a 5, quanto a organização de XMLs/documentos consome tempo da equipe?</label>
+        <div class="scale">
+          <label><input type="radio" name="dor_organizacao" value="1">1<br>Baixo</label>
+          <label><input type="radio" name="dor_organizacao" value="2">2</label>
+          <label><input type="radio" name="dor_organizacao" value="3">3</label>
+          <label><input type="radio" name="dor_organizacao" value="4">4</label>
+          <label><input type="radio" name="dor_organizacao" value="5">5<br>Alto</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Em uma escala de 1 a 5, quanto o cadastro fiscal de produtos gera retrabalho?</label>
+        <div class="scale">
+          <label><input type="radio" name="dor_cadastro" value="1">1<br>Baixo</label>
+          <label><input type="radio" name="dor_cadastro" value="2">2</label>
+          <label><input type="radio" name="dor_cadastro" value="3">3</label>
+          <label><input type="radio" name="dor_cadastro" value="4">4</label>
+          <label><input type="radio" name="dor_cadastro" value="5">5<br>Alto</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Em uma escala de 1 a 5, quanto erros no fechamento fiscal impactam a rotina?</label>
+        <div class="scale">
+          <label><input type="radio" name="dor_fechamento" value="1">1<br>Baixo</label>
+          <label><input type="radio" name="dor_fechamento" value="2">2</label>
+          <label><input type="radio" name="dor_fechamento" value="3">3</label>
+          <label><input type="radio" name="dor_fechamento" value="4">4</label>
+          <label><input type="radio" name="dor_fechamento" value="5">5<br>Alto</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Quais situações geram mais retrabalho fiscal?</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="retrababalho" value="NCM incorreto ou duvidoso"> NCM incorreto ou duvidoso</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="CEST ausente ou divergente"> CEST ausente ou divergente</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="CFOP incorreto"> CFOP incorreto</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="CST/CSOSN incorreto"> CST/CSOSN incorreto</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="Divergência entre XML e ERP"> Divergência entre XML e ERP</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="Erro no SPED/PVA"> Erro no SPED/PVA</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="Cliente envia informação incompleta"> Cliente envia informação incompleta</label>
+          <label class="option"><input type="checkbox" name="retrababalho" value="Correção manual em planilhas"> Correção manual em planilhas</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Quantas horas por mês você estima que a equipe perde com conferências manuais, correções ou retrabalho?</label>
+        <select name="horas_retrabalho">
+          <option value="">Selecione</option>
+          <option>Até 5 horas/mês</option>
+          <option>6 a 15 horas/mês</option>
+          <option>16 a 40 horas/mês</option>
+          <option>41 a 80 horas/mês</option>
+          <option>Acima de 80 horas/mês</option>
+          <option>Não sei estimar</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>5. Sistemas e ferramentas atuais</h3>
+      <p class="section-description">Entender o ambiente atual ajuda a definir integrações futuras e entrada do MVP.</p>
+
+      <div class="question">
+        <label class="main-label">Quais sistemas ou ferramentas você utiliza?</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="ferramentas" value="Domínio/Thomson Reuters"> Domínio/Thomson Reuters</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Contmatic"> Contmatic</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Omie"> Omie</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Alterdata"> Alterdata</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Sieg"> Sieg</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="e-Auditoria"> e-Auditoria</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Excel"> Excel</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Power BI"> Power BI</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Sistema próprio"> Sistema próprio</label>
+          <label class="option"><input type="checkbox" name="ferramentas" value="Outro"> Outro</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Hoje, como vocês acompanham pendências e inconsistências fiscais?</label>
+        <div class="options">
+          <label class="option"><input type="radio" name="controle_pendencias" value="Planilha" required> Planilha</label>
+          <label class="option"><input type="radio" name="controle_pendencias" value="Sistema/ERP"> Sistema/ERP</label>
+          <label class="option"><input type="radio" name="controle_pendencias" value="WhatsApp/e-mail"> WhatsApp/e-mail</label>
+          <label class="option"><input type="radio" name="controle_pendencias" value="Trello/gestor de tarefas"> Trello/gestor de tarefas</label>
+          <label class="option"><input type="radio" name="controle_pendencias" value="Não temos controle claro"> Não temos controle claro</label>
+          <label class="option"><input type="radio" name="controle_pendencias" value="Outro"> Outro</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>6. Reforma Tributária e preparação</h3>
+      <p class="section-description">A transição tributária tende a aumentar a necessidade de saneamento e validação fiscal.</p>
+
+      <div class="question">
+        <label class="main-label">Sua empresa/escritório já iniciou preparação para IBS, CBS e Reforma Tributária?</label>
+        <div class="options">
+          <label class="option"><input type="radio" name="preparacao_reforma" value="Sim, já temos plano"> Sim, já temos plano</label>
+          <label class="option"><input type="radio" name="preparacao_reforma" value="Estamos começando"> Estamos começando</label>
+          <label class="option"><input type="radio" name="preparacao_reforma" value="Ainda não"> Ainda não</label>
+          <label class="option"><input type="radio" name="preparacao_reforma" value="Não sei informar"> Não sei informar</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Quais pontos mais preocupam em relação à Reforma Tributária?</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="Campos novos em documentos fiscais"> Campos novos em documentos fiscais</label>
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="Mudança na apuração"> Mudança na apuração</label>
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="Impacto no cadastro de produtos"> Impacto no cadastro de produtos</label>
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="ERP não estar preparado"> ERP não estar preparado</label>
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="Treinamento da equipe"> Treinamento da equipe</label>
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="Explicar mudanças aos clientes"> Explicar mudanças aos clientes</label>
+          <label class="option"><input type="checkbox" name="preocupacoes_reforma" value="Não sei ainda"> Não sei ainda</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>7. Interesse em uma solução como a Autfisca</h3>
+      <p class="section-description">Este bloco mede aderência ao MVP, prioridades de módulos e percepção de valor.</p>
+
+      <div class="question">
+        <label class="main-label">Quais módulos seriam mais úteis para sua rotina?</label>
+        <div class="options">
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Organizador automático de XMLs"> Organizador automático de XMLs</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Diagnóstico de cadastro fiscal"> Diagnóstico de cadastro fiscal</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Validação NCM/CEST/CFOP/CST"> Validação NCM/CEST/CFOP/CST</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Relatório de inconsistências"> Relatório de inconsistências</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Dashboard de riscos por cliente"> Dashboard de riscos por cliente</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Checklist de fechamento fiscal"> Checklist de fechamento fiscal</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Preparação para Reforma Tributária"> Preparação para Reforma Tributária</label>
+          <label class="option"><input type="checkbox" name="modulos_interesse" value="Relatório executivo para cliente final"> Relatório executivo para cliente final</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Se uma solução identificasse inconsistências fiscais antes do fechamento, qual seria o valor percebido?</label>
+        <div class="scale">
+          <label><input type="radio" name="valor_percebido" value="1">1<br>Baixo</label>
+          <label><input type="radio" name="valor_percebido" value="2">2</label>
+          <label><input type="radio" name="valor_percebido" value="3">3</label>
+          <label><input type="radio" name="valor_percebido" value="4">4</label>
+          <label><input type="radio" name="valor_percebido" value="5">5<br>Alto</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Qual modelo faria mais sentido para você?</label>
+        <div class="options">
+          <label class="option"><input type="radio" name="modelo_preferido" value="Diagnóstico pontual"> Diagnóstico pontual</label>
+          <label class="option"><input type="radio" name="modelo_preferido" value="Mensalidade recorrente"> Mensalidade recorrente</label>
+          <label class="option"><input type="radio" name="modelo_preferido" value="Implantação + mensalidade"> Implantação + mensalidade</label>
+          <label class="option"><input type="radio" name="modelo_preferido" value="Por volume de documentos"> Cobrança por volume de documentos</label>
+          <label class="option"><input type="radio" name="modelo_preferido" value="Por cliente analisado"> Cobrança por cliente analisado</label>
+          <label class="option"><input type="radio" name="modelo_preferido" value="Não sei"> Não sei</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Quanto você consideraria razoável pagar por um diagnóstico fiscal inicial?</label>
+        <select name="preco_diagnostico">
+          <option value="">Selecione</option>
+          <option>Até R$ 300</option>
+          <option>R$ 301 a R$ 700</option>
+          <option>R$ 701 a R$ 1.500</option>
+          <option>R$ 1.501 a R$ 3.000</option>
+          <option>Acima de R$ 3.000</option>
+          <option>Depende do volume e entrega</option>
+          <option>Não pagaria por diagnóstico</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Quanto você consideraria razoável pagar mensalmente por uma solução recorrente?</label>
+        <select name="preco_mensalidade">
+          <option value="">Selecione</option>
+          <option>Até R$ 200/mês</option>
+          <option>R$ 201 a R$ 500/mês</option>
+          <option>R$ 501 a R$ 1.000/mês</option>
+          <option>R$ 1.001 a R$ 2.500/mês</option>
+          <option>Acima de R$ 2.500/mês</option>
+          <option>Depende do volume e entrega</option>
+          <option>Não pagaria mensalidade</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3>8. Piloto, feedback e comentários finais</h3>
+      <p class="section-description">Este bloco identifica possíveis interessados em testar a solução.</p>
+
+      <div class="question">
+        <label class="main-label">Você teria interesse em participar de um piloto ou conversa de validação da Autfisca?</label>
+        <div class="options">
+          <label class="option"><input type="radio" name="interesse_piloto" value="Sim, tenho interesse"> Sim, tenho interesse</label>
+          <label class="option"><input type="radio" name="interesse_piloto" value="Talvez, quero entender melhor"> Talvez, quero entender melhor</label>
+          <label class="option"><input type="radio" name="interesse_piloto" value="Não neste momento"> Não neste momento</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Qual é hoje a maior dor fiscal ou operacional que você gostaria de resolver?</label>
+        <textarea name="maior_dor" placeholder="Descreva livremente..."></textarea>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Que tipo de relatório, painel ou análise faria você perceber valor imediato?</label>
+        <textarea name="valor_imediato" placeholder="Exemplo: ranking de inconsistências, XMLs faltantes, produtos com NCM divergente, relatório para cliente final..."></textarea>
+      </div>
+
+      <div class="question">
+        <label class="main-label">Comentários adicionais</label>
+        <textarea name="comentarios" placeholder="Use este espaço para observações, sugestões ou críticas."></textarea>
+      </div>
+    </section>
+
+        <div class="save-guidance">
+      <strong>Importante:</strong> para concluir sua participação, preencha o formulário e clique no botão
+      <span class="main-action">Enviar / salvar resposta</span>.
+      <br>
+      Os botões <strong>Exportar backup CSV</strong>, <strong>Visualizar backup local</strong>,
+      <strong>Imprimir/salvar PDF</strong> e <strong>Limpar backup local</strong> são recursos auxiliares deste navegador.
+      Eles não substituem o envio da resposta.
+    </div>
+
+    <div id="thanksBox" class="thanks-box">
+      <h3>Resposta registrada. Muito obrigada pela sua contribuição! 💙</h3>
+      Sua participação ajuda diretamente na validação da Autfisca e na construção de uma solução mais útil para a rotina fiscal, contábil e tributária.
+      <br>
+      Caso deseje, você pode fechar esta página após salvar a resposta.
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary">Enviar / salvar resposta</button>
+      <button type="button" class="btn-secondary" onclick="exportarCSV()">Exportar backup CSV</button>
+      <button type="button" class="btn-secondary" onclick="mostrarRespostas()">Visualizar backup local</button>
+      <button type="button" class="btn-secondary" onclick="window.print()">Imprimir / salvar PDF</button>
+      <button type="button" class="btn-danger" onclick="limparRespostas()">Limpar backup local</button>
+    </div>
+
+        <div class="admin-note">
+      Observação: os botões de exportação, visualização e limpeza se referem ao backup local deste navegador.
+      A resposta oficial é enviada ao clicar em <strong>Enviar / salvar resposta</strong>.
+    </div>
+
+    <div id="status" class="status"></div>
+
+  </form>
+
+  <div id="results" class="results">
+    <h3>Respostas salvas neste navegador</h3>
+    <div id="resultsContent"></div>
+  </div>
+
+</div>
+
+<footer>
+  Autfisca - Pesquisa de Validação de Mercado | Desenvolvido para diagnóstico de dores fiscais e operacionais
+</footer>
+
+<script>
+  const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyPL9GT06ZrNQehT-8OUqzTDAJkIU53YMi2HMvJmv3sy7kmMnFJaTeeX4jp4AHSqItFug/exec";
+  const STORAGE_KEY = "autfisca_pesquisa_respostas";
+
+  function getFormData(form) {
+    const data = {};
+    const elements = form.querySelectorAll("input, select, textarea");
+
+    elements.forEach(el => {
+      if (!el.name) return;
+
+      if (el.type === "checkbox") {
+        if (!data[el.name]) data[el.name] = [];
+        if (el.checked) data[el.name].push(el.value);
+      } else if (el.type === "radio") {
+        if (el.checked) data[el.name] = el.value;
+        else if (!data[el.name]) data[el.name] = "";
+      } else {
+        data[el.name] = el.value;
+      }
+    });
+
+    Object.keys(data).forEach(key => {
+      if (Array.isArray(data[key])) {
+        data[key] = data[key].join(" | ");
+      }
+    });
+
+    data.data_resposta = new Date().toLocaleString("pt-BR");
+    return data;
+  }
+
+  function salvarResposta(data) {
+    const respostas = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    respostas.push(data);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(respostas));
+  }
+
+  function showStatus(message, type) {
+    const status = document.getElementById("status");
+    status.textContent = message;
+    status.className = "status " + type;
+    setTimeout(() => {
+      status.className = "status";
+      status.textContent = "";
+    }, 6000);
+  }
+
+  document.getElementById("autfiscaForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      return;
+    }
+
+    const data = getFormData(this);
+
+    data.origem = "Formulario Web Autfisca";
+    data.user_agent = navigator.userAgent;
+
+    try {
+      await fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      });
+
+      salvarResposta(data);
+
+      showStatus("Resposta enviada com sucesso. Muito obrigada pela sua contribuição!", "success");
+
+      const thanksBox = document.getElementById("thanksBox");
+      if (thanksBox) {
+        thanksBox.style.display = "block";
+        thanksBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      limparCamposFormulario();
+      /* window.scrollTo({ top: 0, behavior: "smooth" }); */
+
+    } catch (erro) {
+      salvarResposta(data);
+      showStatus("Falha ao enviar para o Google Sheets. A resposta foi salva localmente.", "warning");
+      console.error(erro);
+    }
+  });
+
+  function obterRespostas() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  }
+
+  function exportarCSV() {
+    const respostas = obterRespostas();
+
+    if (respostas.length === 0) {
+      showStatus("Nenhuma resposta salva ainda.", "warning");
+      return;
+    }
+
+    const headers = Array.from(new Set(respostas.flatMap(obj => Object.keys(obj))));
+    const linhas = respostas.map(obj => {
+      return headers.map(h => {
+        const value = obj[h] || "";
+        return '"' + String(value).replace(/"/g, '""') + '"';
+      }).join(";");
+    });
+
+    const csv = headers.join(";") + "\n" + linhas.join("\n");
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "respostas_pesquisa_autfisca.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+    showStatus("CSV exportado com sucesso.", "success");
+  }
+
+  function mostrarRespostas() {
+    const respostas = obterRespostas();
+    const results = document.getElementById("results");
+    const content = document.getElementById("resultsContent");
+
+    if (respostas.length === 0) {
+      showStatus("Nenhuma resposta salva ainda.", "warning");
+      return;
+    }
+
+    const headers = Array.from(new Set(respostas.flatMap(obj => Object.keys(obj))));
+
+    let html = "<p><strong>Total de respostas:</strong> " + respostas.length + "</p>";
+    html += "<div style='overflow:auto; max-height: 520px;'>";
+    html += "<table><thead><tr>";
+
+    headers.forEach(h => {
+      html += "<th>" + h + "</th>";
+    });
+
+    html += "</tr></thead><tbody>";
+
+    respostas.forEach(resp => {
+      html += "<tr>";
+      headers.forEach(h => {
+        html += "<td>" + (resp[h] || "") + "</td>";
+      });
+      html += "</tr>";
+    });
+
+    html += "</tbody></table></div>";
+
+    content.innerHTML = html;
+    results.style.display = "block";
+    results.scrollIntoView({ behavior: "smooth" });
+  }
+
+      function limparRespostas() {
+    const confirmar = confirm("Deseja limpar o backup local e também limpar os campos preenchidos do formulário? Isso não apaga respostas já enviadas ao Google Sheets.");
+
+    if (!confirmar) return;
+
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+
+      limparCamposFormulario();
+
+      const results = document.getElementById("results");
+      const content = document.getElementById("resultsContent");
+      const thanksBox = document.getElementById("thanksBox");
+      const status = document.getElementById("status");
+
+      if (content) {
+        content.innerHTML = "";
+      }
+
+      if (results) {
+        results.style.display = "none";
+      }
+
+      if (thanksBox) {
+        thanksBox.style.display = "none";
+      }
+
+      if (status) {
+        status.textContent = "";
+        status.className = "status";
+      }
+
+      showStatus("Backup local e campos do formulário foram limpos com sucesso. As respostas enviadas ao Google Sheets não foram apagadas.", "success");
+    } catch (erro) {
+      showStatus("Não foi possível limpar o backup local e os campos do formulário.", "warning");
+      console.error(erro);
+    }
+  }
+
+      if (results) {
+        results.style.display = "none";
+      }
+
+      const thanksBox = document.getElementById("thanksBox");
+      if (thanksBox) {
+        thanksBox.style.display = "none";
+      }
+
+      showStatus("Backup local limpo com sucesso. As respostas enviadas ao Google Sheets não foram apagadas.", "success");
+    } catch (erro) {
+      showStatus("Não foi possível limpar o backup local deste navegador.", "warning");
+      console.error(erro);
+    }
+  }
+  function limparCamposFormulario() {
+    const form = document.getElementById("autfiscaForm");
+
+    if (form) {
+      form.reset();
+
+      const campos = form.querySelectorAll("input, textarea, select");
+
+      campos.forEach(function(campo) {
+        if (campo.type === "checkbox" || campo.type === "radio") {
+          campo.checked = false;
+        } else if (campo.tagName === "SELECT") {
+          campo.selectedIndex = 0;
+        } else {
+          campo.value = "";
+        }
+      });
+    }
+  }
+</script>
+
+<!-- AUTFISCA_FIX_ENVIO_INICIO -->
+<script>
+(function() {
+  const GOOGLE_APPS_SCRIPT_URL_FIX = "https://script.google.com/macros/s/AKfycbyPL9GT06ZrNQehT-8OUqzTDAJkIU53YMi2HMvJmv3sy7kmMnFJaTeeX4jp4AHSqItFug/exec";
+  const STORAGE_KEY_FIX = "autfisca_pesquisa_respostas";
+
+  function autfiscaShowStatus(message, type) {
+    let status = document.getElementById("status");
+
+    if (!status) {
+      status = document.createElement("div");
+      status.id = "status";
+      status.className = "status";
+      const form = document.getElementById("autfiscaForm");
+      if (form) form.appendChild(status);
+    }
+
+    status.textContent = message;
+    status.className = "status " + (type || "success");
+    status.style.display = "block";
+  }
+
+  function autfiscaGetFormData(form) {
+    const data = {};
+    const elements = form.querySelectorAll("input, select, textarea");
+
+    elements.forEach(function(el) {
+      if (!el.name) return;
+
+      if (el.type === "checkbox") {
+        if (!data[el.name]) data[el.name] = [];
+        if (el.checked) data[el.name].push(el.value);
+      } else if (el.type === "radio") {
+        if (el.checked) {
+          data[el.name] = el.value;
+        } else if (!data[el.name]) {
+          data[el.name] = "";
+        }
+      } else {
+        data[el.name] = el.value || "";
+      }
+    });
+
+    Object.keys(data).forEach(function(key) {
+      if (Array.isArray(data[key])) {
+        data[key] = data[key].join(" | ");
+      }
+    });
+
+    data.data_envio_local = new Date().toLocaleString("pt-BR");
+    data.origem = "Formulario Web Autfisca";
+    data.user_agent = navigator.userAgent;
+
+    return data;
+  }
+
+  function autfiscaSalvarBackupLocal(data) {
+    const respostas = JSON.parse(localStorage.getItem(STORAGE_KEY_FIX) || "[]");
+    respostas.push(data);
+    localStorage.setItem(STORAGE_KEY_FIX, JSON.stringify(respostas));
+  }
+
+  function autfiscaLimparCampos() {
+    const form = document.getElementById("autfiscaForm");
+    if (!form) return;
+
+    form.reset();
+
+    form.querySelectorAll("input, textarea, select").forEach(function(campo) {
+      if (campo.type === "checkbox" || campo.type === "radio") {
+        campo.checked = false;
+      } else if (campo.tagName === "SELECT") {
+        campo.selectedIndex = 0;
+      } else {
+        campo.value = "";
+      }
+    });
+  }
+
+  function autfiscaMostrarAgradecimento() {
+    let thanksBox = document.getElementById("thanksBox");
+
+    if (!thanksBox) {
+      thanksBox = document.createElement("div");
+      thanksBox.id = "thanksBox";
+      thanksBox.className = "thanks-box";
+      thanksBox.innerHTML = 
+        <h3>Resposta registrada. Muito obrigada pela sua contribuição! 💙</h3>
+        Sua participação ajuda diretamente na validação da Autfisca e na construção de uma solução mais útil para a rotina fiscal, contábil e tributária.
+        <br>
+        Caso deseje, você pode fechar esta página após salvar a resposta.
+      ;
+
+      const actions = document.querySelector(".actions");
+      if (actions && actions.parentNode) {
+        actions.parentNode.insertBefore(thanksBox, actions);
+      }
+    }
+
+    thanksBox.style.display = "block";
+    thanksBox.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  async function autfiscaEnviarFormulario(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+
+    const form = document.getElementById("autfiscaForm");
+
+    if (!form) {
+      alert("Formulario nao encontrado.");
+      return false;
+    }
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return false;
+    }
+
+    const data = autfiscaGetFormData(form);
+
+    try {
+      await fetch(GOOGLE_APPS_SCRIPT_URL_FIX, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      });
+
+      autfiscaSalvarBackupLocal(data);
+      autfiscaShowStatus("Resposta enviada e salva com sucesso. Muito obrigada pela sua contribuição!", "success");
+      autfiscaMostrarAgradecimento();
+      autfiscaLimparCampos();
+
+    } catch (erro) {
+      autfiscaSalvarBackupLocal(data);
+      autfiscaShowStatus("Nao foi possivel confirmar o envio ao Google Sheets, mas a resposta foi salva no backup local deste navegador.", "warning");
+      console.error(erro);
+    }
+
+    return false;
+  }
+
+  window.limparCamposFormulario = autfiscaLimparCampos;
+
+  window.limparRespostas = function() {
+    const confirmar = confirm("Deseja limpar o backup local e também os campos preenchidos? Isso não apaga respostas já enviadas ao Google Sheets.");
+    if (!confirmar) return;
+
+    localStorage.removeItem(STORAGE_KEY_FIX);
+    localStorage.removeItem("autfisca_pesquisa_respostas");
+
+    autfiscaLimparCampos();
+
+    const results = document.getElementById("results");
+    const content = document.getElementById("resultsContent");
+    const thanksBox = document.getElementById("thanksBox");
+
+    if (content) content.innerHTML = "";
+    if (results) results.style.display = "none";
+    if (thanksBox) thanksBox.style.display = "none";
+
+    autfiscaShowStatus("Backup local e campos do formulário foram limpos. O Google Sheets não foi alterado.", "success");
+  };
+
+  window.mostrarRespostas = function() {
+    const respostasFix = JSON.parse(localStorage.getItem(STORAGE_KEY_FIX) || "[]");
+    const respostasAntigas = JSON.parse(localStorage.getItem("autfisca_pesquisa_respostas") || "[]");
+    const respostas = respostasFix.length ? respostasFix : respostasAntigas;
+
+    if (!respostas.length) {
+      autfiscaShowStatus("Nenhuma resposta salva ainda.", "warning");
+      return;
+    }
+
+    let results = document.getElementById("results");
+    let content = document.getElementById("resultsContent");
+
+    if (!results) {
+      results = document.createElement("div");
+      results.id = "results";
+      results.className = "results";
+      document.body.appendChild(results);
+    }
+
+    if (!content) {
+      content = document.createElement("div");
+      content.id = "resultsContent";
+      results.appendChild(content);
+    }
+
+    const headers = Array.from(new Set(respostas.flatMap(obj => Object.keys(obj))));
+
+    let html = "<p><strong>Total de respostas:</strong> " + respostas.length + "</p>";
+    html += "<div style='overflow:auto; max-height:520px;'><table><thead><tr>";
+
+    headers.forEach(h => html += "<th>" + h + "</th>");
+    html += "</tr></thead><tbody>";
+
+    respostas.forEach(resp => {
+      html += "<tr>";
+      headers.forEach(h => html += "<td>" + (resp[h] || "") + "</td>");
+      html += "</tr>";
+    });
+
+    html += "</tbody></table></div>";
+
+    content.innerHTML = html;
+    results.style.display = "block";
+    results.scrollIntoView({ behavior: "smooth" });
+  };
+
+  window.exportarCSV = function() {
+    const respostasFix = JSON.parse(localStorage.getItem(STORAGE_KEY_FIX) || "[]");
+    const respostasAntigas = JSON.parse(localStorage.getItem("autfisca_pesquisa_respostas") || "[]");
+    const respostas = respostasFix.length ? respostasFix : respostasAntigas;
+
+    if (!respostas.length) {
+      autfiscaShowStatus("Nenhuma resposta salva ainda.", "warning");
+      return;
+    }
+
+    const headers = Array.from(new Set(respostas.flatMap(obj => Object.keys(obj))));
+    const linhas = respostas.map(obj => headers.map(h => '"' + String(obj[h] || "").replace(/"/g, '""') + '"').join(";"));
+    const csv = headers.join(";") + "\n" + linhas.join("\n");
+
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "respostas_pesquisa_autfisca_backup.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+    autfiscaShowStatus("Backup CSV exportado com sucesso.", "success");
+  };
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("autfiscaForm");
+
+    if (form) {
+      form.setAttribute("autocomplete", "off");
+
+      form.addEventListener("submit", autfiscaEnviarFormulario, true);
+      form.onsubmit = autfiscaEnviarFormulario;
+    }
+
+    const submitBtn = document.querySelector('button[type="submit"], .btn-primary');
+    if (submitBtn) {
+      submitBtn.textContent = "Enviar / salvar resposta";
+    }
+  });
+})();
+</script>
+<!-- AUTFISCA_FIX_ENVIO_FIM -->
+</body>
+</html>
+
+
+
+
