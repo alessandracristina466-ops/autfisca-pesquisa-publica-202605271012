@@ -1671,8 +1671,167 @@
 })();
 </script>
 <!-- AUTFISCA_FIX_ENVIO_MOBILE_FIM -->
+
+<!-- AUTFISCA_THANKS_FIX_INICIO -->
+<style>
+  #autfiscaThanksFinal {
+    display: none;
+    max-width: 960px;
+    margin: 28px auto;
+    padding: 24px 26px;
+    border-radius: 18px;
+    border: 1px solid #abefc6;
+    border-left: 7px solid #027a48;
+    background: #ecfdf3;
+    color: #064e3b;
+    font-family: inherit;
+    box-shadow: 0 12px 28px rgba(2, 122, 72, 0.10);
+    line-height: 1.6;
+    text-align: left;
+  }
+
+  #autfiscaThanksFinal h2 {
+    margin: 0 0 10px;
+    color: #027a48;
+    font-size: 24px;
+  }
+
+  #autfiscaThanksFinal p {
+    margin: 8px 0;
+    font-size: 15px;
+  }
+
+  #autfiscaThanksFinal .thanks-highlight {
+    font-weight: 700;
+    color: #075e45;
+  }
+
+  @media (max-width: 700px) {
+    #autfiscaThanksFinal {
+      margin: 22px 14px;
+      padding: 20px;
+    }
+
+    #autfiscaThanksFinal h2 {
+      font-size: 21px;
+    }
+  }
+</style>
+<div id="autfiscaThanksFinal">
+  <h2>Resposta registrada. Muito obrigada pela sua contribuição! 💙</h2>
+  <p>
+    Sua participação ajuda diretamente na validação da <span class="thanks-highlight">Autfisca</span>
+    e na construção de uma solução mais útil para a rotina fiscal, contábil e tributária.
+  </p>
+  <p>
+    Você já pode fechar esta página. Caso queira, também pode compartilhar a pesquisa com outro profissional da área.
+  </p>
+</div>
+<script>
+(function() {
+  function inserirCaixaAgradecimento() {
+    if (document.getElementById("autfiscaThanksFinal")) return;
+
+    const box = document.createElement("div");
+    box.id = "autfiscaThanksFinal";
+    box.innerHTML = `
+      <h2>Resposta registrada. Muito obrigada pela sua contribuição! 💙</h2>
+      <p>
+        Sua participação ajuda diretamente na validação da <span class="thanks-highlight">Autfisca</span>
+        e na construção de uma solução mais útil para a rotina fiscal, contábil e tributária.
+      </p>
+      <p>
+        Você já pode fechar esta página. Caso queira, também pode compartilhar a pesquisa com outro profissional da área.
+      </p>
+    `;
+
+    const actions = document.querySelector(".actions");
+    if (actions && actions.parentNode) {
+      actions.parentNode.insertBefore(box, actions.nextSibling);
+    } else {
+      document.body.appendChild(box);
+    }
+  }
+
+  function mostrarAgradecimentoAutfisca() {
+    inserirCaixaAgradecimento();
+
+    const box = document.getElementById("autfiscaThanksFinal");
+    if (box) {
+      box.style.display = "block";
+      box.style.opacity = "1";
+      box.removeAttribute("hidden");
+
+      setTimeout(function() {
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 250);
+    }
+
+    const status = document.getElementById("status");
+    if (status) {
+      status.textContent = "Resposta enviada com sucesso. Muito obrigada pela sua contribuição!";
+      status.className = "status success";
+      status.style.display = "block";
+    }
+  }
+
+  window.mostrarAgradecimentoAutfisca = mostrarAgradecimentoAutfisca;
+
+  function conectarAgradecimentoAoBotao() {
+    inserirCaixaAgradecimento();
+
+    const form = document.getElementById("autfiscaForm");
+    const btn = document.getElementById("autfiscaEnviarBtn") ||
+                document.querySelector('.actions button') ||
+                document.querySelector('button[type="submit"]');
+
+    if (btn && !btn.dataset.thanksConnected) {
+      btn.dataset.thanksConnected = "true";
+
+      btn.addEventListener("click", function() {
+        setTimeout(function() {
+          mostrarAgradecimentoAutfisca();
+        }, 1200);
+      }, false);
+    }
+
+    if (form && !form.dataset.thanksConnected) {
+      form.dataset.thanksConnected = "true";
+
+      form.addEventListener("submit", function() {
+        setTimeout(function() {
+          mostrarAgradecimentoAutfisca();
+        }, 1200);
+      }, false);
+    }
+
+    const originalFinal = window.autfiscaEnviarFinal;
+
+    if (typeof originalFinal === "function" && !window.autfiscaEnviarFinalComThanks) {
+      window.autfiscaEnviarFinalComThanks = true;
+
+      window.autfiscaEnviarFinal = async function(evento) {
+        const retorno = await originalFinal(evento);
+        setTimeout(function() {
+          mostrarAgradecimentoAutfisca();
+        }, 900);
+        return retorno;
+      };
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", conectarAgradecimentoAoBotao);
+  } else {
+    conectarAgradecimentoAoBotao();
+  }
+})();
+</script>
+<!-- AUTFISCA_THANKS_FIX_FIM -->
 </body>
 </html>
+
+
 
 
 
